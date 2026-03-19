@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaito Admin Panel 🚀</title>
+    <style>
+        :root { --primary: #9333ea; --bg: #09090b; --card: #111827; --text: #f8fafc; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .admin-box { background-color: var(--card); padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #1e293b; }
+        h2 { text-align: center; color: var(--primary); margin-top: 0; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.9rem; margin-bottom: 5px; color: #94a3b8; }
+        input { width: 100%; padding: 10px; background: #1e293b; border: 1px solid #334155; border-radius: 6px; color: white; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--primary); }
+        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        button:hover { background: #7e22ce; }
+        #status { text-align: center; margin-top: 15px; font-size: 0.9rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-box">
+        <h2>KAITO ADMIN 🕵️‍♂️</h2>
+        <form id="uploadForm">
+            <div class="input-group">
+                <label>Secret Key (Password)</label>
+                <input type="password" id="secret_key" placeholder="Enter Admin Key" required>
+            </div>
+            <div class="input-group">
+                <label>Anime Name</label>
+                <input type="text" id="anime_name" placeholder="e.g. Solo Leveling" required>
+            </div>
+            <div class="input-group">
+                <label>Season & Episode</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="season" placeholder="Season (e.g. 1)" required>
+                    <input type="number" id="episode" placeholder="Episode (e.g. 5)" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Thumbnail URL (Image)</label>
+                <input type="url" id="thumbnail" placeholder="https://image-link.jpg" required>
+            </div>
+            <div class="input-group">
+                <label>Video URL (Catbox/Direct Link)</label>
+                <input type="url" id="video_url" placeholder="https://files.catbox.moe/..." required>
+            </div>
+            
+            <button type="submit">Upload Anime 🚀</button>
+        </form>
+        <p id="status"></p>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Page refresh hone se roko
+            const statusText = document.getElementById('status');
+            statusText.innerText = "Uploading... ⏳";
+            statusText.style.color = "yellow";
+
+            // Form se data uthao
+            const data = {
+                name: document.getElementById('anime_name').value,
+                season: parseInt(document.getElementById('season').value),
+                episode: parseInt(document.getElementById('episode').value),
+                thumbnail: document.getElementById('thumbnail').value,
+                url: document.getElementById('video_url').value,
+                category: "Hindi" // Default Hindi rakha hai
+            };
+
+            const secretKey = document.getElementById('secret_key').value;
+
+            try {
+                // YAHAN TERE VPS KA API LINK AAYEGA (Abhi placeholder hai)
+                const response = await fetch('http://TERA_VPS_IP:8000/add-anime', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': secretKey // Security bypass prevent karne ke liye
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if(response.ok) {
+                    statusText.innerText = "Anime Uploaded Successfully! 🎉";
+                    statusText.style.color = "#22c55e";
+                    document.getElementById('uploadForm').reset(); // Form clear kardo
+                } else {
+                    statusText.innerText = "Error! Galat Secret Key ya Server Down ❌";
+                    statusText.style.color = "#ef4444";
+                }
+            } catch (error) {
+                statusText.innerText = "Backend Server se connect nahi ho paya! ⚠️";
+                statusText.style.color = "#ef4444";
+            }
+        });
+    </script>
+</body>
+</html>
