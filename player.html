@@ -4,49 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Kaito Anime Player</title>
-    <link rel='stylesheet' href='/wp-content/themes/torofilm/public/css/torofilm-public.css' type='text/css' media='all' />
     <style>
         :root { --primary: #9333ea; --body:#09090b; }
-        .video-container { width: 100%; height: 500px; background: #000; border-radius: 12px; overflow: hidden; margin: 10px 0; }
+        body { background-color: var(--body); color: white; font-family: sans-serif; margin: 0; }
+        .cont { max-width: 800px; margin: 0 auto; padding: 10px; }
+        .video-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 2px solid #1e293b; }
         iframe { width: 100%; height: 100%; border: none; }
+        .info-box { padding: 15px; background: #111827; margin: 15px 0; border-radius: 12px; border: 1px solid #1e293b; }
     </style>
 </head>
-<body style="background-color: var(--body); color: white;">
-    <div id="aa-wp" class="cont">
-        <header style="padding: 20px; text-align: center;">
-            <h1 style="color:white;">KAITO <span style="color:var(--primary)">ANIME</span></h1>
+<body>
+    <div class="cont">
+        <header style="text-align: center; padding: 20px;">
+            <h1 style="margin:0;">KAITO <span style="color:var(--primary)">ANIME</span></h1>
         </header>
 
-        <div id="anime-info" style="padding: 15px; background: rgba(255,255,255,0.05); margin: 15px; border-radius: 12px;">
-            <h2 id="anime-title" style="font-size: 1.4rem;">Loading Anime...</h2>
-            <p id="episode-info" style="color: #94a3b8;">Fetching episode details...</p>
+        <div class="info-box">
+            <h2 id="anime-title" style="margin:0; font-size: 1.2rem;">Loading...</h2>
+            <p id="episode-info" style="color: #94a3b8; font-size: 0.9rem; margin: 5px 0 0;">Streaming from Secure Server</p>
         </div>
 
         <div class="video-container" id="player-wrapper">
             <div style="display:flex; justify-content:center; align-items:center; height:100%;">
-                <p>Connecting to Secure Servers...</p>
+                <p>Establishing Connection... 🚀</p>
             </div>
         </div>
+        
+        <p style="text-align:center; font-size:0.8rem; color:#444;">Bhai Kaito, if video doesn't load, refresh once.</p>
     </div>
 
     <script>
-        // URL se ID nikaalo (e.g. ?id=one-piece-1x35)
         const params = new URLSearchParams(window.location.search);
         let epId = params.get('id');
 
         if (epId) {
-            epId = epId.replace(/\/$/, ""); // Aakhri slash hatao
+            epId = epId.replace(/\/$/, ""); 
             document.getElementById('anime-title').innerText = epId.split('-').join(' ').toUpperCase();
-            document.getElementById('episode-info').innerText = "Streaming: " + epId;
 
-            // GogoAnime format mein convert karo: one-piece-1x35 -> one-piece-episode-35
+            // Naya Stable Source: GogoAnime Embed
+            // Format: one-piece-episode-35
             let cleanId = epId.replace('-1x', '-episode-');
             
-            // Player inject karo (Using a free stable embed provider)
-            const embedUrl = `https://anime-embed-player.vercel.app/e/${cleanId}`;
-            document.getElementById('player-wrapper').innerHTML = `<iframe src="${embedUrl}" allowfullscreen></iframe>`;
-        } else {
-            document.getElementById('player-wrapper').innerHTML = "<p style='text-align:center; padding:50px;'>No Episode ID found! Go back to Home.</p>";
+            // Hum direct GogoAnime ka stable embed use karenge
+            const embedUrl = `https://playtuna.xyz/download?id=${cleanId}`;
+            
+            document.getElementById('player-wrapper').innerHTML = `
+                <iframe src="${embedUrl}" allowfullscreen scrolling="no"></iframe>
+            `;
         }
     </script>
 </body>
